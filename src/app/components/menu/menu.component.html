@@ -1,0 +1,16 @@
+<ion-toolbar>
+  <ion-buttons slot="end" class="horizontal-buttons">
+    <ion-button (click)="goToHome()">
+      <ion-icon name="home"></ion-icon>
+    </ion-button>
+    <ion-button (click)="goToLogin()" *ngIf="!isLogged">
+      Iniciar sesión
+    </ion-button>
+    <ion-button (click)="goToDashboard()" *ngIf="isLogged">
+      Panel de Alumno
+    </ion-button>
+    <ion-button (click)="logout()" *ngIf="isLogged">
+      <ion-icon name="log-out"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
