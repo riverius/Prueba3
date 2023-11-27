@@ -9,6 +9,9 @@ import { Router } from '@angular/router';
   
 })
 export class DashboardPage implements OnInit {
+  username = '';
+  title = 'Dashboard';
+
   constructor(private stateService:StateService, private router:Router ) { }
 
   ngOnInit() {
