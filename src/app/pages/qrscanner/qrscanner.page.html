@@ -15,11 +15,16 @@
     </ion-card-content>
   </ion-card>
 
-  <div class="ion-text-center">
-    <ion-button expand="full" color="success" (click)="mostrarAlerta()">
-      ESCANEAR QR
-    </ion-button>
-  </div>
-
+  <ion-list>
+    <ion-item *ngFor="let barcode of barcodes">
+      <ion-label position="stacked">{{ barcode.format }}</ion-label>
+      <ion-input type="text" [value]="barcode.rawValue"></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="scan()" [disabled]="!isSupported">
+      <ion-icon name="scan"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
   <ion-icon name="school" size="large" color="primary" class="ion-margin-top"></ion-icon>
 </ion-content>
