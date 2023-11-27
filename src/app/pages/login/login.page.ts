@@ -11,6 +11,7 @@ export class LoginPage implements OnInit {
   title: string = 'Ingresar al Portal Academico';
   username: string = '';
   password: string = '';
+  typeUser: string = '';
   constructor(private stateService:StateService, private router:Router) { }
 
   ngOnInit() {
@@ -18,7 +19,12 @@ export class LoginPage implements OnInit {
 
   login() {
     if (this.stateService.login(this.username, this.password)) {
-      this.router.navigate(['dashboard']);
+      const typeUser = this.stateService.getTypeUser().subscribe(typeUser => this.typeUser = typeUser)
+      if (this.typeUser == 'teacher') {
+        this.router.navigate(['dashboard']);
+      } else if (this.typeUser == 'student') {
+        this.router.navigate(['qrscanner']);
+      }
     } else {
       alert('Usuario o contraseña incorrectos');
     }
