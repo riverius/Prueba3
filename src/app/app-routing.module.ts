@@ -19,27 +19,30 @@ const routes: Routes = [
   },
   {
     path: 'home',
+    canActivate: [LoginGuard],
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },  
+
+  {
+    path: 'curso',
+    canActivate: [LoginGuard],
+    loadChildren: () => import('./pages/curso/curso.module').then( m => m.CursoPageModule)
+  },
+  {
+    path: 'qrscanner',
+    canActivate: [LoginGuard],
+    loadChildren: () => import('./pages/qrscanner/qrscanner.module').then( m => m.QrscannerPageModule)
+  },
+  {
+    path: 'attendance',
+    canActivate: [LoginGuard],
+    loadChildren: () => import('./pages/attendance/attendance.module').then( m => m.AttendancePageModule)
+  },
   {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
   },
-  {
-    path: 'curso',
-    loadChildren: () => import('./pages/curso/curso.module').then( m => m.CursoPageModule)
-  },
-  {
-    path: 'qrscanner',
-    loadChildren: () => import('./pages/qrscanner/qrscanner.module').then( m => m.QrscannerPageModule)
-  },  {
-    path: 'attendance',
-    loadChildren: () => import('./pages/attendance/attendance.module').then( m => m.AttendancePageModule)
-  },
-
-
-
 ];
 
 @NgModule({
