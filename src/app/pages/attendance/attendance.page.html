@@ -13,7 +13,18 @@
 
   <h1 class="ion-text-center">Asistencia a {{ nombre }} de {{ asignatura }}</h1>
   <div class="ion-text-center ion-padding-top">
-    <qrcode [qrdata]="newQR" [width]="150" [errorCorrectionLevel]="'M'"></qrcode>
+    <qrcode *ngIf="newQR" [qrdata]="newQR" [width]="150" [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
   </div>
-
+  <h2 class="ion-text-center">Alumnos registrados</h2>
+  <ion-grid>
+    <ion-row>
+      <ion-col>Nombre</ion-col>
+      <ion-col>Hora</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let ua of usersAndAsistencias$ | async">
+      <ion-col *ngIf="ua.user">{{ua.user.nombre}}</ion-col>
+      <ion-col *ngIf="ua.asistencia">{{ua.asistencia.fecha | date:'shortTime'}}</ion-col>
+    </ion-row>
+  </ion-grid>
+  
 </ion-content>

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BarcodeScanner, Barcode, IsGoogleBarcodeScannerModuleAvailableResult } from '@capacitor-mlkit/barcode-scanning';
 import { AlertController } from '@ionic/angular';
+import { DatabaseService } from 'src/app/services/database.service';
+import { StateService } from 'src/app/services/state.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-qrscanner',
@@ -9,9 +12,9 @@ import { AlertController } from '@ionic/angular';
 })
 export class QrscannerPage implements OnInit {
   isSupported = false;
-  barcodes: Barcode[] = [];
+  barcode: Barcode | null = null
 
-  constructor(private alertController: AlertController) {}
+  constructor(private alertController: AlertController, private stateService: StateService, private databaseService: DatabaseService) {}
 
   ngOnInit() {
     BarcodeScanner.isSupported().then((result) => {
@@ -30,7 +33,21 @@ export class QrscannerPage implements OnInit {
       await BarcodeScanner.installGoogleBarcodeScannerModule();
     }
     const { barcodes } = await BarcodeScanner.scan();
-    this.barcodes.push(...barcodes);
+    const latestBarcode = barcodes[barcodes.length - 1];
+    this.barcode = latestBarcode;
+  
+    const cursoId = this.barcode?.rawValue;
+    const user = await this.stateService.getCurrentUser().pipe(take(1)).toPromise();
+    const userId = user?.id;
+    console.log('cursoId:', cursoId);
+    console.log('userId:', userId);
+    if (cursoId && userId) {
+      try {
+        await this.databaseService.setAttendance(cursoId, userId);
+      } catch (error) {
+        console.error('Error setting attendance:', error);
+      }
+    }
   }
 
   async requestPermissions(): Promise<boolean> {

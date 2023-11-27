@@ -17,12 +17,12 @@ export class LoginPage implements OnInit {
   ngOnInit() {
   }
 
-  login() {
-    if (this.stateService.login(this.username, this.password)) {
-      const typeUser = this.stateService.getTypeUser().subscribe(typeUser => this.typeUser = typeUser)
-      if (this.typeUser == 'teacher') {
+  async login() {
+    const user = await this.stateService.login(this.username, this.password);
+    if (user) {
+      if (user.tipo == 'profesor') {
         this.router.navigate(['dashboard']);
-      } else if (this.typeUser == 'student') {
+      } else if (user.tipo == 'alumno') {
         this.router.navigate(['qrscanner']);
       }
     } else {

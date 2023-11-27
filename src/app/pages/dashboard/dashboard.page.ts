@@ -15,8 +15,8 @@ export class DashboardPage implements OnInit {
   constructor(private stateService:StateService, private router:Router ) { }
 
   ngOnInit() {
-    this.stateService.username.subscribe((value) => {
-      this.username = value;
+    this.stateService.getCurrentUser().subscribe((value) => {
+      this.username = value?.nombre || '';
     });
   }
 }

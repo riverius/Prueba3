@@ -1,62 +1,45 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { collection, getDocs, query, where, Firestore } from '@angular/fire/firestore';
+import { User } from '../models/user';
+import { Course } from '../models/course';
 
-interface Course {
-  id: string;
-  nombre: string;
-  asignatura: string;
-}
 @Injectable({
   providedIn: 'root'
 })
 export class StateService {
   public isLoggedIn = new BehaviorSubject<boolean>(false);
-  public username = new BehaviorSubject<string>('');
-  public typeUser = new BehaviorSubject<string>('');
   private curso = new BehaviorSubject<Course | null>(null)
+  private user = new BehaviorSubject<User | null>(null)
 
-  login(username: string, password: string): boolean {
-    if (username == 'Marcelo' && password == '12345') {
+  db: Firestore = inject(Firestore);
+
+  async login(username: string, password: string): Promise<User | null> {
+    const userCollection = collection(this.db, 'usuarios');
+    const userQuery = query(userCollection, where('username', '==', username), where('password', '==', password));
+    const userSnapshot = await getDocs(userQuery);
+
+    if (!userSnapshot.empty) {
+      const user = { id: userSnapshot.docs[0].id, ...userSnapshot.docs[0].data() } as User;
       this.setIsLoggedIn(true);
-      this.setUsername(username);
-      this.setTypeUser('teacher');
-      return true;
-    } else if (username == 'Orel' && password == '1234567') {
-      this.setIsLoggedIn(true);
-      this.setUsername(username);
-      this.setTypeUser('student');
-      return true;
+      this.setCurrentUser(user);
+      return user;
     }
-    return false;
-  }
 
-  setTypeUser(value: string) {
-    this.typeUser.next(value);
+    return null;
   }
 
   setIsLoggedIn(value: boolean) {
     this.isLoggedIn.next(value);
   }
 
-  setUsername(username: string) {
-    this.username.next(username);
-  }
-
-  getUsername() {
-    return this.username.asObservable();
-  }
-
   getIsLoggedIn() {
     return this.isLoggedIn.asObservable();
   }
 
-  getTypeUser() {
-    return this.typeUser.asObservable();
-  }
-
   logout() {
     this.setIsLoggedIn(false);
-    this.setUsername('');
+    this.user.unsubscribe();
   }
 
   setCurso(curso: any) {
@@ -65,6 +48,16 @@ export class StateService {
 
   getCurso() {
     return this.curso.asObservable();
+  }
+
+  getCurrentUser() {
+    return this.user.asObservable();
+  }
+
+  setCurrentUser(user: User) {
+    if (!this.user.isStopped) {
+      this.user.next(user);
+    }
   }
 
   constructor() { }
