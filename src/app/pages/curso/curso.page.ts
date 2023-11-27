@@ -1,44 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import { DatabaseService } from '../../services/database.service';
 
+interface Course {
+  id: string;
+  nombre: string;
+  asignatura: string;
+}
 
 @Component({
   selector: 'app-curso',
   templateUrl: './curso.page.html',
   styleUrls: ['./curso.page.scss'],
 })
-export class CursoPage {
-  cursos: any[] = [
-    {
-      id: 1,
-      nombre: 'Curso de Ionic',
-      asignatura: 'Introducción a Ionic'
-    },
-    {
-      id: 2,
-      nombre: 'Curso de Ionic 2',
-      asignatura: 'Introducción a Ionic 2'
-    },
-    {
-      id: 3,
-      nombre: 'Curso de Ionic 3',
-      asignatura: 'Introducción a Ionic 3'
-    },
-    {
-      id: 4,
-      nombre: 'Curso de Ionic 4',
-      asignatura: 'Introducción a Ionic 4'
-    },
-    {
-      id: 5,
-      nombre: 'Curso de Ionic 5',
-      asignatura: 'Introducción a Ionic 5'
-    },
-  ];
+export class CursoPage implements OnInit{
+
   newQR!: string;
+  cursos$: Course[] = [];
 
-  constructor() {}
+  constructor(private databaseService: DatabaseService) {  }
 
-  async getQR(id : number) {
+  ngOnInit() {
+    this.databaseService.getCourses().then(cursos => {
+      this.cursos$ = cursos;
+    });
+  }
+
+  async getQR(id : string) {
     this.newQR = id.toString();
   }
+
 }
