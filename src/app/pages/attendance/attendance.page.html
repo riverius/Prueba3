@@ -1,0 +1,19 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Asistencia </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Asistencia</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <h1 class="ion-text-center">Asistencia a {{ nombre }} de {{ asignatura }}</h1>
+  <div class="ion-text-center ion-padding-top">
+    <qrcode [qrdata]="newQR" [width]="150" [errorCorrectionLevel]="'M'"></qrcode>
+  </div>
+
+</ion-content>

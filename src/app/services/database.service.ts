@@ -1,5 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, addDoc, collection, getDocs } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, deleteDoc, onSnapshot, query, doc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+
 
 
 interface Course {
@@ -16,16 +18,23 @@ export class DatabaseService {
 
   db: Firestore = inject(Firestore);
 
-  async getCourses() {
+  getCourses(): Observable<Course[]> {
     const coursesCollection = collection(this.db, 'cursos');
-    const coursesSnapshot = await getDocs(coursesCollection);
-    this.courses = coursesSnapshot.docs.map(doc => doc.data()) as Course[];
-    return this.courses;
+    return new Observable<Course[]>(observer => {
+      const unsubscribe = onSnapshot(query(coursesCollection), snapshot => {
+        this.courses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Course[];
+        observer.next(this.courses);
+      });
+      return unsubscribe;
+    });
   }
 
-  async setCourse(course: Course) {
-    const coursesCollection = collection(this.db, 'cursos');
-    const courseRef = await addDoc(coursesCollection, course);
-    return courseRef;
+  async addCourse(nombre: string, asignatura: string) {
+    await addDoc(collection(this.db, 'cursos'), { nombre, asignatura });
+  }
+
+  async deleteCourse(id: string) {
+    const docRef = doc(this.db, 'cursos', id);
+    await deleteDoc(docRef);
   }
 }

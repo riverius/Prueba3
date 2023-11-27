@@ -1,5 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { DatabaseService } from '../../services/database.service';
+import { StateService } from 'src/app/services/state.service';
+import { Router } from '@angular/router';
 
 interface Course {
   id: string;
@@ -14,19 +16,19 @@ interface Course {
 })
 export class CursoPage implements OnInit{
 
-  newQR!: string;
   cursos$: Course[] = [];
 
-  constructor(private databaseService: DatabaseService) {  }
+  constructor(private databaseService: DatabaseService, private stateService: StateService, private router: Router ) {  }
 
   ngOnInit() {
-    this.databaseService.getCourses().then(cursos => {
+    this.databaseService.getCourses().subscribe(cursos => {
       this.cursos$ = cursos;
     });
   }
 
-  async getQR(id : string) {
-    this.newQR = id.toString();
+  setCurso(curso: Course) {
+    this.stateService.setCurso(curso);
+    this.router.navigate(['/attendance']);
   }
 
 }
