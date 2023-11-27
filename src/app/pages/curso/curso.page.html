@@ -1,25 +1,39 @@
 <!-- home.page.html -->
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-title class="ion-text-center">PANEL DEL PROFESOR</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Bienvenido, Profesor</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p>Aquí puedes generar códigos QR y administrar tu panel.</p>
-    </ion-card-content>
-  </ion-card>
+<ion-content [fullscreen]="true">
+  <h1 class="ion-text-center">Cursos</h1>
+  <ion-list class="ion-margin-horizontal">
+    <ion-item>
+      <ion-label>
+        <h2>Curso</h2>
+      </ion-label>
+      <ion-label>
+        <h2>Asignatura</h2>
+      </ion-label>
+      <ion-label>
+        <h2>Acciones</h2>
+      </ion-label>
+    </ion-item>
 
-  <div class="ion-text-center">
-    <ion-button expand="full" color="success" (click)="mostrarAlerta()">
-      GENERAR QR
-    </ion-button>
+    <ion-item *ngFor="let curso of cursos">
+      <ion-label>
+        <p>{{ curso.nombre }}</p>
+      </ion-label>
+      <ion-label>
+        <p>{{ curso.asignatura }}</p>
+      </ion-label>
+      <ion-label>
+        <ion-button (click)="getQR(curso.id)">Iniciar Clase</ion-button>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="ion-text-center ion-padding-top">
+    <qrcode [qrdata]="newQR" [width]="150" [errorCorrectionLevel]="'M'"></qrcode>
   </div>
-
-  <ion-icon name="school" size="large" color="primary" class="ion-margin-top"></ion-icon>
 </ion-content>
