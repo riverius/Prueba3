@@ -9,14 +9,6 @@ import { Router } from '@angular/router';
   
 })
 export class DashboardPage implements OnInit {
-  title: string = 'Panel de Alumno';
-  username:string = '';
-  photoService: any;
-
-  qrText: string = '';
-  scannerDevice: string | undefined;
-  scannedValue: string | undefined;
-
   constructor(private stateService:StateService, private router:Router ) { }
 
   ngOnInit() {
