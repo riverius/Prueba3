@@ -26,6 +26,11 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'curso',
+    loadChildren: () => import('./pages/curso/curso.module').then( m => m.CursoPageModule)
+  },
+
 ];
 
 @NgModule({

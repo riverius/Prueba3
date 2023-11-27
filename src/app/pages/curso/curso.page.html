@@ -1,0 +1,25 @@
+<!-- home.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">PANEL DEL PROFESOR</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Bienvenido, Profesor</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Aquí puedes generar códigos QR y administrar tu panel.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="ion-text-center">
+    <ion-button expand="full" color="success" (click)="mostrarAlerta()">
+      GENERAR QR
+    </ion-button>
+  </div>
+
+  <ion-icon name="school" size="large" color="primary" class="ion-margin-top"></ion-icon>
+</ion-content>
