@@ -1,16 +1,16 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title class="ion-text-center">ALUMNOS</ion-title>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Registrar Asistencia</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Bienvenido</ion-card-title>
+      <ion-card-title>Bienvenido {{ nombre }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p>Aquí puedes escanear códigos QR y confirmar tu asistencia</p>
+      <p>Escanea el código QR que compartira tu docente para confirmar tu asistencia</p>
     </ion-card-content>
   </ion-card>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
@@ -18,5 +18,4 @@
       <ion-icon name="scan"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-icon name="school" size="large" color="primary" class="ion-margin-top"></ion-icon>
 </ion-content>

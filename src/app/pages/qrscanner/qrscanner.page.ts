@@ -4,6 +4,7 @@ import { AlertController } from '@ionic/angular';
 import { DatabaseService } from 'src/app/services/database.service';
 import { StateService } from 'src/app/services/state.service';
 import { take } from 'rxjs/operators';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-qrscanner',
@@ -13,10 +14,14 @@ import { take } from 'rxjs/operators';
 export class QrscannerPage implements OnInit {
   isSupported = false;
   barcode: Barcode | null = null
+  nombre: string | undefined;
 
-  constructor(private alertController: AlertController, private stateService: StateService, private databaseService: DatabaseService) {}
+  constructor(private toastController: ToastController, private alertController: AlertController, private stateService: StateService, private databaseService: DatabaseService) {}
 
   ngOnInit() {
+    this.stateService.getCurrentUser().subscribe((user) => {
+      this.nombre = user?.nombre;
+    });
     BarcodeScanner.isSupported().then((result) => {
       this.isSupported = result.supported;
     });
@@ -39,13 +44,12 @@ export class QrscannerPage implements OnInit {
     const cursoId = this.barcode?.rawValue;
     const user = await this.stateService.getCurrentUser().pipe(take(1)).toPromise();
     const userId = user?.id;
-    console.log('cursoId:', cursoId);
-    console.log('userId:', userId);
     if (cursoId && userId) {
       try {
-        await this.databaseService.setAttendance(cursoId, userId);
+        const message = await this.databaseService.setAttendance(cursoId, userId);
+        this.presentToast(message, 'success');
       } catch (error) {
-        console.error('Error setting attendance:', error);
+        this.presentToast('Se produjo un error al registrar la asistencia', 'danger');
       }
     }
   }
@@ -62,6 +66,17 @@ export class QrscannerPage implements OnInit {
       buttons: ['OK'],
     });
     await alert.present();
+  }
+
+  async presentToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 5000,
+      color: color,
+      position: 'middle',
+      cssClass: 'font-size: 20px;'
+    });
+    toast.present();
   }
 
 }

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, addDoc, collection, deleteDoc, onSnapshot, query, where, doc, Timestamp, docData, collectionData } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, deleteDoc, getDocs, onSnapshot, query, where, doc, Timestamp, docData, collectionData } from '@angular/fire/firestore';
 import { Observable, combineLatest, map, switchMap } from 'rxjs';
 import { Course } from '../models/course';
 import { Attendance } from '../models/attendance';
@@ -32,9 +32,17 @@ export class DatabaseService {
     await deleteDoc(docRef);
   }
 
-  async setAttendance(cursoId: string, userId: string) {
-    const now = Timestamp.now();
-    await addDoc(collection(this.db, 'asistencias'), { cursoId, userId, fecha: now });
+  async setAttendance(cursoId: string, userId: string): Promise<string> {
+    const attendanceCollection = collection(this.db, 'asistencias');
+    const attendanceQuery = query(attendanceCollection, where('cursoId', '==', cursoId), where('userId', '==', userId));
+    const userAttendance = await getDocs(attendanceQuery);
+    if (!userAttendance.empty) {
+      return 'Su asistencia ya fue registrada correctamente';
+    } else {
+      const now = Timestamp.now();
+      await addDoc(collection(this.db, 'asistencias'), { cursoId, userId, fecha: now });
+      return 'Asistencia registrada correctamente';
+    }
   }
 
   getAttendance(cursoId: string): Observable<Attendance[]> {
