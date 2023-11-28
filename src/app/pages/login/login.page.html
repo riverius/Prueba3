@@ -1,8 +1,17 @@
-<app-header [title]="title"></app-header> 
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Iniciar Sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Iniciar Sesión</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
   <div class="container">
-    <h3>Inicio de Sesión</h3>
     <p>Por favor ingrese su nombre de usuario y contraseña para ingresar al portal académico.</p>
     <ion-label>Nombre de Usuario</ion-label>
     <ion-input id="usernameInput" placeholder="Ingrese el nombre de usuario (Marcelo)" [(ngModel)]="username" type="text" class="ion-padding" autofocus></ion-input>
@@ -10,7 +19,7 @@
     <ion-input id="passwordInput" placeholder="Ingrese la contraseña (12345)" [(ngModel)]="password" type="password" class="ion-padding"></ion-input>
     <ion-label [routerLink]="['/recovery']">Recuperar Contraseña</ion-label>
     <div class="ion-text-center">
-      <ion-button (click)="login()">Ingresar al panel <ion-icon name="caret-forward-outline"></ion-icon></ion-button>
+      <ion-button (click)="login()">Ingresar<ion-icon name="caret-forward-outline"></ion-icon></ion-button>
     </div>
   </div>
 </ion-content>

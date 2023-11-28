@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class DashboardPage implements OnInit {
   username = '';
-  title = 'Dashboard';
+  title = 'Panel de Profesor';
 
   constructor(private stateService:StateService, private router:Router ) { }
 

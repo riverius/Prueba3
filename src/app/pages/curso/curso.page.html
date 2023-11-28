@@ -1,34 +1,35 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title class="ion-text-center">PANEL DEL PROFESOR</ion-title>
+    <ion-title class="ion-text-center">Cursos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <h1 class="ion-text-center">Cursos</h1>
-  <ion-list class="ion-margin-horizontal">
-    <ion-item>
-      <ion-label>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
         <h2>Curso</h2>
-      </ion-label>
-      <ion-label>
+      </ion-col>
+      <ion-col>
         <h2>Asignatura</h2>
-      </ion-label>
-      <ion-label>
+      </ion-col>
+      <ion-col class="ion-text-right">
         <h2>Acciones</h2>
-      </ion-label>
-    </ion-item>
+      </ion-col>
+    </ion-row>
 
-    <ion-item *ngFor="let curso of cursos$">
-      <ion-label>
+    <ion-row *ngFor="let curso of cursos$">
+      <ion-col>
         <p>{{ curso.nombre }}</p>
-      </ion-label>
-      <ion-label>
+      </ion-col>
+      <ion-col>
         <p>{{ curso.asignatura }}</p>
-      </ion-label>
-      <ion-label>
-        <ion-button (click)="setCurso(curso)">Iniciar Asistencia</ion-button>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+      </ion-col>
+      <ion-col class="ion-text-right">
+        <ion-button (click)="setCurso(curso)">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
