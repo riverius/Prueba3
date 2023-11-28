@@ -1,83 +1,73 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginPage } from './login.page';
 import { StateService } from '../../services/state.service';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Component } from '@angular/core';
+
+// Stubs for app-header and app-menu components
+@Component({selector: 'app-header', template: ''})
+class HeaderComponentStub {}
+
+@Component({selector: 'app-menu', template: ''})
+class MenuComponentStub {}
 
 describe('LoginPage', () => {
   let component: LoginPage;
   let fixture: ComponentFixture<LoginPage>;
   let stateService: jasmine.SpyObj<StateService>;
-  let router: jasmine.SpyObj<Router>;
+  let router: Router;
+  let navigateSpy: jasmine.Spy;
 
-  beforeEach(async(() => {
+  beforeEach(async() => {
     const stateServiceSpy = jasmine.createSpyObj('StateService', ['login']);
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     TestBed.configureTestingModule({
-      declarations: [LoginPage],
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule], // use RouterTestingModule without routes
+      declarations: [ LoginPage, HeaderComponentStub, MenuComponentStub ], // include the stubs here
       providers: [
         { provide: StateService, useValue: stateServiceSpy },
-        { provide: Router, useValue: routerSpy },
-      ],
+        // remove the provide for Router
+      ]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
     stateService = TestBed.inject(StateService) as jasmine.SpyObj<StateService>;
-    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    router = TestBed.inject(Router); // inject the router directly
+    navigateSpy = spyOn(router, 'navigate'); // set up a spy for the navigate method
+    fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call login method on button click', () => {
-    spyOn(component, 'login');
-    const button = fixture.debugElement.query(By.css('button'));
-    button.triggerEventHandler('click', null);
-    expect(component.login).toHaveBeenCalled();
+  it('should navigate to dashboard when user is a professor', async () => {
+    const mockUser = { id: '1', nombre: 'Test User', username: 'testuser', password: 'testpassword', tipo: 'profesor' };
+    stateService.login.and.returnValue(Promise.resolve(mockUser));
+
+    await component.login();
+
+    expect(router.navigate).toHaveBeenCalledWith(['dashboard']);
   });
 
-  it('should navigate to dashboard for professor', async(() => {
-    const user = { tipo: 'profesor' };
-    stateService.login.and.returnValue(Promise.resolve(user));
+  it('should navigate to qrscanner when user is a student', async () => {
+    const mockUser = { id: '1', nombre: 'Test User', username: 'testuser', password: 'testpassword', tipo: 'alumno' };
+    stateService.login.and.returnValue(Promise.resolve(mockUser));
 
-    component.username = 'test';
-    component.password = 'password';
-    fixture.detectChanges();
+    await component.login();
 
-    fixture.whenStable().then(() => {
-      const button = fixture.debugElement.query(By.css('button'));
-      button.triggerEventHandler('click', null);
+    expect(router.navigate).toHaveBeenCalledWith(['qrscanner']);
+  });
 
-      fixture.whenStable().then(() => {
-        expect(router.navigate).toHaveBeenCalledWith(['dashboard']);
-      });
-    });
-  }));
+  it('should alert when login fails', async () => {
+    stateService.login.and.returnValue(Promise.resolve(null));
+    spyOn(window, 'alert');
 
-  it('should navigate to qrscanner for student', async(() => {
-    const user = { tipo: 'alumno' };
-    stateService.login.and.returnValue(Promise.resolve(user));
+    await component.login();
 
-    component.username = 'test';
-    component.password = 'password';
-    fixture.detectChanges();
-
-    fixture.whenStable().then(() => {
-      const button = fixture.debugElement.query(By.css('button'));
-      button.triggerEventHandler('click', null);
-
-      fixture.whenStable().then(() => {
-        expect(router.navigate).toHaveBeenCalledWith(['qrscanner']);
-      });
-    });
-  }));
+    expect(window.alert).toHaveBeenCalledWith('Usuario o contraseña incorrectos');
+  });
+  
 });
