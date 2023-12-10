@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { DatabaseService } from 'src/app/services/database.service';
-import { StateService } from 'src/app/services/state.service';
+import { DatabaseService } from '../../services/database.service';
+import { StateService } from '../../services/state.service';
 import { EMPTY, Observable, of, switchMap, tap } from 'rxjs';
-import { User } from 'src/app/models/user';
-import { Attendance } from 'src/app/models/attendance';
+import { User } from '../../models/user';
+import { Attendance } from '../../models/attendance';
 
 @Component({
   selector: 'app-attendance',
