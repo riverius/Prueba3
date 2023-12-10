@@ -1,16 +1,10 @@
-<ion-header [translucent]="true">
+<!-- Dispositivos Moviles -->
+<ion-header [translucent]="true" *ngIf="deviceService.isMobileDevice()">
   <ion-toolbar>
     <ion-title>Iniciar Sesión</ion-title>
   </ion-toolbar>
 </ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Iniciar Sesión</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  
+<ion-content [fullscreen]="true" *ngIf="deviceService.isMobileDevice()">
   <div class="container">
     <p>Por favor ingrese su nombre de usuario y contraseña para ingresar al portal académico.</p>
     <ion-label>Nombre de Usuario</ion-label>
@@ -23,5 +17,19 @@
     </div>
   </div>
 </ion-content>
+<app-footer *ngIf="deviceService.isMobileDevice()"></app-footer>
 
-<app-footer></app-footer>
+<!-- Dispositivos Escritorio -->
+<div class="container" *ngIf="!deviceService.isMobileDevice()">
+  <div class="container">
+    <p>Por favor ingrese su nombre de usuario y contraseña para ingresar al portal académico.</p>
+    <label for="usernameInput" class="form-label">Nombre de Usuario</label>
+    <input id="usernameInput" placeholder="Ingrese el nombre de usuario" [(ngModel)]="username" type="text" class="form-control" autofocus>
+    <label for="passwordInput" class="form-label">Contraseña</label>
+    <input id="passwordInput" placeholder="Ingrese la contraseña" [(ngModel)]="password" type="password" class="form-control">
+    <a [routerLink]="['/recovery']" class="d-block mt-2">Recuperar Contraseña</a>
+    <div class="text-center mt-3">
+      <button (click)="login()" class="btn btn-primary">Ingresar</button>
+    </div>
+  </div>
+</div>

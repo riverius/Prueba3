@@ -1,6 +1,7 @@
 import { Platform, ToastController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { StateService } from '../../services/state.service';
+import { DeviceService } from '../../services/device.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 declare global {
@@ -20,7 +21,7 @@ export class LoginPage implements OnInit {
   typeUser: string = '';
   private lastBackButtonPress: number = 0;
 
-  constructor(private stateService:StateService, private router:Router, private platform: Platform, private toastController: ToastController, private location: Location) { 
+  constructor(private stateService:StateService, private router:Router, private platform: Platform, private toastController: ToastController, private location: Location, public deviceService: DeviceService) { 
     this.platform.backButton.subscribeWithPriority(0, () => {
       if (this.router.url === '/login') {
         const now = new Date().getTime();
@@ -37,6 +38,7 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
+
   }
 
   async login() {
