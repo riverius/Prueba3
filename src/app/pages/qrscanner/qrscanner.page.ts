@@ -3,8 +3,8 @@ import { BarcodeScanner, Barcode, IsGoogleBarcodeScannerModuleAvailableResult } 
 import { AlertController } from '@ionic/angular';
 import { DatabaseService } from 'src/app/services/database.service';
 import { StateService } from 'src/app/services/state.service';
-import { take } from 'rxjs/operators';
 import { ToastController } from '@ionic/angular';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-qrscanner',
@@ -16,12 +16,9 @@ export class QrscannerPage implements OnInit {
   barcode: Barcode | null = null
   nombre: string | undefined;
 
-  constructor(private toastController: ToastController, private alertController: AlertController, private stateService: StateService, private databaseService: DatabaseService) {}
+  constructor(private authService: AuthService, private toastController: ToastController, private alertController: AlertController, private stateService: StateService, private databaseService: DatabaseService) {}
 
   ngOnInit() {
-    this.stateService.getCurrentUser().subscribe((user) => {
-      this.nombre = user?.nombre;
-    });
     BarcodeScanner.isSupported().then((result) => {
       this.isSupported = result.supported;
     });
@@ -40,10 +37,9 @@ export class QrscannerPage implements OnInit {
     const { barcodes } = await BarcodeScanner.scan();
     const latestBarcode = barcodes[barcodes.length - 1];
     this.barcode = latestBarcode;
-  
+
     const cursoId = this.barcode?.rawValue;
-    const user = await this.stateService.getCurrentUser().pipe(take(1)).toPromise();
-    const userId = user?.id;
+    const userId = await this.authService.getUserId();
     if (cursoId && userId) {
       try {
         const message = await this.databaseService.setAttendance(cursoId, userId);

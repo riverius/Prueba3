@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { StateService } from '../../services/state.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,11 +10,8 @@ export class DashboardPage implements OnInit {
   username = '';
   title = 'Panel de Profesor';
 
-  constructor(private stateService:StateService, private router:Router ) { }
+  constructor() { }
 
   ngOnInit() {
-    this.stateService.getCurrentUser().subscribe((value) => {
-      this.username = value?.nombre || '';
-    });
   }
 }

@@ -1,0 +1,51 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="ion-text-center">REGISTRO</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="container ion-padding">
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+
+      <h1 class="text-center">Nuevo Usuario</h1>
+      <p>Complete los campos para registrar un nuevo usuario.</p>
+      <ion-input formControlName="first_name" placeholder="Nombre" type="text" shape="round" required>
+        <ion-label position="floating">Nombre</ion-label>
+      </ion-input>
+      <ion-input formControlName="last_name" placeholder="Apellido" type="text" shape="round" required>
+        <ion-label position="floating">Apellido</ion-label>
+      </ion-input>
+      <ion-input formControlName="email" placeholder="Correo Electrónico" type="email" shape="round" required>
+        <ion-label position="floating">Correo Electrónico</ion-label>
+      </ion-input>
+      <ion-input formControlName="password" placeholder="Contraseña" type="password" shape="round" required>
+        <ion-label position="floating">Contraseña</ion-label>
+      </ion-input>
+      <ion-input formControlName="confirmPassword" placeholder="Confirmar Contraseña" type="password" shape="round" required>
+        <ion-label position="floating">Confirmar Contraseña</ion-label>
+      </ion-input>
+      <ion-input formControlName="phone" placeholder="Teléfono" type="text" shape="round" required>
+        <ion-label position="floating">Teléfono</ion-label>
+      </ion-input>
+      <ion-input formControlName="address" placeholder="Dirección" type="text" shape="round" required>
+        <ion-label position="floating">Dirección</ion-label>
+      </ion-input>
+      <ion-radio-group formControlName="role" style="display: flex; flex-direction: row; justify-content: space-between;">
+          <ion-label>Administrador</ion-label>
+          <ion-radio value="admin"></ion-radio>
+          <ion-label>Profesor</ion-label>
+          <ion-radio value="teacher"></ion-radio>
+          <ion-label>Estudiante</ion-label>
+          <ion-radio value="student"></ion-radio>
+      </ion-radio-group>
+
+      <ion-button type="submit" expand="block" size="large" shape="round" [disabled]="!registerForm.valid">
+        GUARDAR
+        <ion-icon name="arrow-forward" slot="end"></ion-icon>
+      </ion-button>
+    </form>
+  </div>
+</ion-content>
+
+<app-footer></app-footer>

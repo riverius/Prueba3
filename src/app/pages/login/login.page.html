@@ -1,35 +1,47 @@
-<!-- Dispositivos Moviles -->
-<ion-header [translucent]="true" *ngIf="deviceService.isMobileDevice()">
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Iniciar Sesión</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true" *ngIf="deviceService.isMobileDevice()">
+
+<ion-content [fullscreen]="true">
   <div class="container">
-    <p>Por favor ingrese su nombre de usuario y contraseña para ingresar al portal académico.</p>
-    <ion-label>Nombre de Usuario</ion-label>
-    <ion-input id="usernameInput" placeholder="Ingrese el nombre de usuario" [(ngModel)]="username" type="text" class="ion-padding" autofocus></ion-input>
-    <ion-label>Contraseña</ion-label>
-    <ion-input id="passwordInput" placeholder="Ingrese la contraseña" [(ngModel)]="password" type="password" class="ion-padding"></ion-input>
-    <ion-label [routerLink]="['/recovery']">Recuperar Contraseña</ion-label>
-    <div class="ion-text-center">
-      <ion-button (click)="login()">Ingresar<ion-icon name="caret-forward-outline"></ion-icon></ion-button>
-    </div>
+    <p>Ingrese su nombre de usuario y contraseña para acceder al portal académico.</p>
+    <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+      <div class="text-center">
+        <img src="assets/logotipo.png" alt="logo" class="img-fluid">
+      </div>
+      <h2 class="text-center">INICIAR SESIÓN</h2>
+
+      <ion-input formControlName="email" placeholder="Correo Electrónico" type="email" shape="round" required>
+        <ion-label position="floating">Correo Electrónico</ion-label>
+        <ion-note color="danger" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          Ingrese un correo electrónico válido.
+        </ion-note>
+      </ion-input>
+
+      <ion-input formControlName="password" placeholder="Contraseña" type="password" shape="round" required>
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-note color="danger" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          La contraseña debe tener al menos 6 caracteres, una mayúscula, un número
+          y un símbolo especial.
+        </ion-note>
+      </ion-input>
+
+      <ion-checkbox slot="end" formControlName="rememberMe">
+        Mantener sesión iniciada
+      </ion-checkbox>
+
+      <ion-label (click)="forgotPassword()" role="link">
+        ¿Olvidó su contraseña?
+      </ion-label>
+
+      <ion-button type="submit" expand="block" size="large" shape="round" [disabled]="!loginForm.valid">
+        INGRESAR
+        <ion-icon name="arrow-forward" slot="end"></ion-icon>
+      </ion-button>
+    </form>
   </div>
 </ion-content>
-<app-footer *ngIf="deviceService.isMobileDevice()"></app-footer>
 
-<!-- Dispositivos Escritorio -->
-<div class="container" *ngIf="!deviceService.isMobileDevice()">
-  <div class="container">
-    <p>Por favor ingrese su nombre de usuario y contraseña para ingresar al portal académico.</p>
-    <label for="usernameInput" class="form-label">Nombre de Usuario</label>
-    <input id="usernameInput" placeholder="Ingrese el nombre de usuario" [(ngModel)]="username" type="text" class="form-control" autofocus>
-    <label for="passwordInput" class="form-label">Contraseña</label>
-    <input id="passwordInput" placeholder="Ingrese la contraseña" [(ngModel)]="password" type="password" class="form-control">
-    <a [routerLink]="['/recovery']" class="d-block mt-2">Recuperar Contraseña</a>
-    <div class="text-center mt-3">
-      <button (click)="login()" class="btn btn-primary">Ingresar</button>
-    </div>
-  </div>
-</div>
+<app-footer></app-footer>

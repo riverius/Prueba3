@@ -3,7 +3,6 @@ import { Firestore, addDoc, collection, deleteDoc, getDocs, onSnapshot, query, w
 import { Observable, combineLatest, map, switchMap } from 'rxjs';
 import { Course } from '../models/course';
 import { Attendance } from '../models/attendance';
-import { User } from '../models/user';
 @Injectable({
   providedIn: 'root'
 })
@@ -56,20 +55,20 @@ export class DatabaseService {
     );
   }
 
-  getUser(userId: string): Observable<User> {
-    const userDoc = doc(this.db, 'usuarios', userId);
-    return docData(userDoc, { idField: 'id' }) as Observable<User>;
-  }
+  // getUser(userId: string): Observable<User> {
+  //   const userDoc = doc(this.db, 'usuarios', userId);
+  //   return docData(userDoc, { idField: 'id' }) as Observable<User>;
+  // }
 
-  getUsersByCourseId(cursoId: string): Observable<{ user: User, asistencia: Attendance }[]> {
-    return this.getAttendance(cursoId).pipe(
-      switchMap(asistencias =>
-        combineLatest(asistencias.map(asistencia =>
-          this.getUser(asistencia.userId).pipe(
-            map(user => ({ user, asistencia }))
-          )
-        ))
-      )
-    );
-  }
+  // getUsersByCourseId(cursoId: string): Observable<{ user: User, asistencia: Attendance }[]> {
+  //   return this.getAttendance(cursoId).pipe(
+  //     switchMap(asistencias =>
+  //       combineLatest(asistencias.map(asistencia =>
+  //         this.getUser(asistencia.userId).pipe(
+  //           map(user => ({ user, asistencia }))
+  //         )
+  //       ))
+  //     )
+  //   );
+  // }
 }

@@ -29,7 +29,7 @@
           <ion-col>Hora</ion-col>
         </ion-row>
         <ion-row *ngFor="let ua of usersAndAsistencias$ | async">
-          <ion-col *ngIf="ua.user">{{ua.user.nombre}}</ion-col>
+          <ion-col *ngIf="ua.user">{{ua.user.first_name}}</ion-col>
           <ion-col *ngIf="ua.asistencia">{{ua.asistencia.fecha | date:'shortTime'}}</ion-col>
         </ion-row>
       </ion-grid>

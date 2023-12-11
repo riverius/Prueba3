@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { LoginGuard } from './guards/login.guard';
+import { AuthGuard } from './../app/guards/auth.guard';
 
 const routes: Routes = [
 
@@ -10,7 +10,8 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    canActivate: [LoginGuard],
+    canActivate: [AuthGuard],
+    data: { roles: ['teacher'] },
     loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardPageModule)
   },
   {
@@ -19,23 +20,27 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    canActivate: [LoginGuard],
+    canActivate: [AuthGuard],
+    data: { roles: ['teacher'] },
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },  
 
   {
     path: 'curso',
-    canActivate: [LoginGuard],
+    canActivate: [AuthGuard],
+    data: { roles: ['teacher'] },
     loadChildren: () => import('./pages/curso/curso.module').then( m => m.CursoPageModule)
   },
   {
     path: 'qrscanner',
-    canActivate: [LoginGuard],
+    canActivate: [AuthGuard],
+    data: { roles: ['student'] },
     loadChildren: () => import('./pages/qrscanner/qrscanner.module').then( m => m.QrscannerPageModule)
   },
   {
     path: 'attendance',
-    canActivate: [LoginGuard],
+    canActivate: [AuthGuard],
+    data: { roles: ['teacher'] },
     loadChildren: () => import('./pages/attendance/attendance.module').then( m => m.AttendancePageModule)
   },
   {
@@ -43,6 +48,17 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'register',
+    loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'admin',
+    canActivate: [AuthGuard],
+    data: { roles: ['admin'] },
+    loadChildren: () => import('./pages/admin/admin.module').then( m => m.AdminPageModule)
+  },
+
 ];
 
 @NgModule({
