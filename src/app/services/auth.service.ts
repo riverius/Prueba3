@@ -36,7 +36,11 @@ export class AuthService {
     const userRef = doc(db, 'usuarios', uid);
     const userSnap = await getDoc(userRef);
     if (userSnap.exists()) {
-      this.user = userSnap.data() as User;
+      const userData = userSnap.data() as User;
+      this.user = {
+        ...this.user,
+        ...userData,
+      };
     }
   }
 

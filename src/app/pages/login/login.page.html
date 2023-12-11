@@ -1,10 +1,10 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" *ngIf="deviceService.isMobileDevice()">
   <ion-toolbar>
     <ion-title>Iniciar Sesión</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" *ngIf="deviceService.isMobileDevice()">
   <div class="container">
     <p>Ingrese su nombre de usuario y contraseña para acceder al portal académico.</p>
     <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
@@ -43,5 +43,51 @@
     </form>
   </div>
 </ion-content>
+<app-footer *ngIf="deviceService.isMobileDevice()"></app-footer>
 
-<app-footer></app-footer>
+<div class="container" *ngIf="!deviceService.isMobileDevice()">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h2 class="text-center">Iniciar Sesión</h2>
+      <p>Ingrese su nombre de usuario y contraseña para acceder al portal académico.</p>
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div class="text-center">
+          <img src="assets/logotipo.png" alt="logo" class="img-fluid">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Correo Electrónico</label>
+          <input id="email" formControlName="email" placeholder="Correo Electrónico" type="email" class="form-control" required>
+          <div class="invalid-feedback" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+            Ingrese un correo electrónico válido.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input id="password" formControlName="password" placeholder="Contraseña" type="password" class="form-control" required>
+          <div class="invalid-feedback" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            La contraseña debe tener al menos 6 caracteres, una mayúscula, un número y un símbolo especial.
+          </div>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" formControlName="rememberMe" id="rememberMe">
+          <label class="form-check-label" for="rememberMe">
+            Mantener sesión iniciada
+          </label>
+        </div>
+
+        <a (click)="forgotPassword()" role="button">
+          ¿Olvidó su contraseña?
+        </a>
+
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="!loginForm.valid">
+          INGRESAR
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+

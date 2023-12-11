@@ -1,50 +1,27 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from './../services/auth.service';
-import { Router } from '@angular/router';
+import { ExtendedUser } from './../models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
+  constructor(private authService: AuthService, private router:Router) {}
 
-  constructor(private authService: AuthService, private router: Router) {}
-
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const userPromise = this.authService.getUser();
-  
-    return userPromise.then((user) => {
-      if (!user) {
-        this.router.navigateByUrl('/login');
-        return false;
-      }
-  
-      const allowedRoles = route.data['roles'] || [];
-  
-      if (!allowedRoles.includes(user.role)) {
-        switch (user.role) {
-          case 'admin':
-            this.router.navigateByUrl('/admin');
-            break;
-          case 'teacher':
-            this.router.navigateByUrl('/dashboard');
-            break;
-          case 'student':
-            this.router.navigateByUrl('/qrscanner');
-            break;
-          default:
-            this.router.navigateByUrl('/home');
-            break;
-        }
-        return false;
-      }
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> | boolean {
+    const requiredRoles = route.data['roles'] as string[];
+    if (!requiredRoles || !requiredRoles.length) {
       return true;
-    }).catch((error) => {
-      console.error(error);
-      return false;
-    });
+    }
+    return this.authService.isLogedIn().then((isLoggedIn) => {
+        if (!isLoggedIn) {
+          this.router.navigateByUrl('/login');
+          return false;
+        }
+        const userRole = (this.authService.user as ExtendedUser).role;
+        return requiredRoles.includes(userRole);
+      });
   }
 }

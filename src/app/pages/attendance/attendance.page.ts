@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../../services/database.service';
 import { StateService } from '../../services/state.service';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { ExtendedUser } from '../../models/user';
 import { Attendance } from '../../models/attendance';
+import { switchMap, tap, map } from 'rxjs/operators'; // Importa el operador map
 
 @Component({
   selector: 'app-attendance',
@@ -20,16 +21,18 @@ export class AttendancePage implements OnInit {
   constructor(private stateService: StateService, private databaseService: DatabaseService) { }
 
   ngOnInit() {
-    // this.usersAndAsistencias$ = this.stateService.getCurso().pipe(
-    //   tap(async curso => {
-    //     if (curso) {
-    //       this.newQR = await this.getQR(curso.id);
-    //       this.nombre = curso.nombre;
-    //       this.asignatura = curso.asignatura;
-    //     }
-    //   }),
-    //   switchMap(curso => curso ? this.databaseService.getUsersByCourseId(curso.id) : of([]))
-    // );
+    this.usersAndAsistencias$ = this.stateService.getCurso().pipe(
+      tap(async curso => {
+        if (curso) {
+          this.newQR = await this.getQR(curso.id);
+          this.nombre = curso.nombre;
+          this.asignatura = curso.asignatura;
+        }
+      }),
+      switchMap(curso => curso ? this.databaseService.getUsersByCourseId(curso.id).pipe(
+        map((users: { user: ExtendedUser, asistencia: Attendance }[]) => users.map(userAsistencia => ({ user: userAsistencia.user, asistencia: {} as Attendance })))
+      ) : of([]))
+    );
   }
 
   async getQR(id: string): Promise<string> {
