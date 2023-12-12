@@ -144,7 +144,7 @@ export class AuthService {
     }
   }
 
-  async resetPassword(email: string): Promise<void> {
+  async recoveryPassword(email: string): Promise<void> {
     const auth = getAuth(this.app);
     try {
       await sendPasswordResetEmail(auth, email);

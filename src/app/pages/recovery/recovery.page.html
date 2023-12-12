@@ -1,9 +1,12 @@
 <app-header [title]="title"></app-header>
 <ion-content [fullscreen]="true">
   <div class="container">
-    <ion-label>Nombre de Usuario</ion-label>
-    <ion-input placeholder="Ingresar Usuario" type="text" class="ion-padding"></ion-input>
-    <ion-button routerLink="/login">Recuperar</ion-button>
+    <form (ngSubmit)="recovery()">
+      <p>Introduce tu correo electrónico para recuperar tu contraseña</p>
+      <ion-input placeholder="Correo Electrónico" [(ngModel)]="email" name="email" required></ion-input>
+      <ion-button type="submit">Recuperar</ion-button>
+      <ion-button routerLink="/login">Volver</ion-button>
+    </form>
   </div>
 </ion-content>
 <app-footer></app-footer>

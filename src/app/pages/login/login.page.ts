@@ -104,7 +104,7 @@ export class LoginPage implements OnInit {
   }
 
   forgotPassword() {
-    this.router.navigateByUrl('forgot-password');
+    this.router.navigateByUrl('recovery');
   }
  
 }

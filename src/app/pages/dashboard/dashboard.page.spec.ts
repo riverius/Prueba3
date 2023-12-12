@@ -1,17 +1,18 @@
 import { TestBed } from '@angular/core/testing';
-import { StateService } from '../../services/state.service';
+import { AuthService } from '../../services/auth.service';
 import { of } from 'rxjs';
 import { Firestore } from '@angular/fire/firestore';
 import { DashboardPage } from './dashboard.page';
+import { ExtendedUser } from 'src/app/models/user';
 
 describe('DashboardPage', () => {
-  let stateService: StateService;
+  let authService: AuthService;
   let component: DashboardPage;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        StateService,
+        AuthService,
         DashboardPage,
         {
           provide: Firestore,
@@ -26,16 +27,27 @@ describe('DashboardPage', () => {
         },
       ],
     });
-    stateService = TestBed.inject(StateService);
+    authService = TestBed.inject(AuthService);
     component = TestBed.inject(DashboardPage);
   });
 
-  it('should set username on init', () => {
-    const mockUser = { id: '1', nombre: 'Test User', username: 'testuser', password: 'testpassword', tipo: 'testtype' };
-    spyOn(stateService, 'getCurrentUser').and.returnValue(of(mockUser));
-    component.ngOnInit();
-    expect(component.username).toEqual('Test User');
-    expect(stateService.getCurrentUser).toHaveBeenCalled();
+  it('should call getCurrentUserData', async () => {
+    const mockUser: Partial<ExtendedUser> = { 
+      uid: '1', 
+      displayName: 'Test User', 
+      email: 'testuser@test.com', 
+      first_name: 'Test',
+      last_name: 'User',
+      phone: '1234567890',
+      address: 'Test Address',
+      role: 'student',
+      // Agrega aquí cualquier otra propiedad que necesites para tu prueba
+    };
+    spyOn(authService, 'getCurrentUserData').and.returnValue(Promise.resolve());
+
+    await component.ngOnInit();
+
+    expect(authService.getCurrentUserData).toHaveBeenCalled();
   });
 
 });
