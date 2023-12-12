@@ -30,10 +30,13 @@ export class AttendancePage implements OnInit {
         }
       }),
       switchMap(curso => curso ? this.databaseService.getUsersByCourseId(curso.id).pipe(
-        map((users: { user: ExtendedUser, asistencia: Attendance }[]) => users.map(userAsistencia => ({ user: userAsistencia.user, asistencia: {} as Attendance })))
+        map((users: { user: ExtendedUser, asistencia: Attendance }[]) => users.map(userAsistencia => ({
+          user: userAsistencia.user,
+          asistencia: { ...userAsistencia.asistencia, fecha: userAsistencia.asistencia.fecha || new Date() }
+        })))
       ) : of([]))
-    );
-  }
+    );
+  }
 
   async getQR(id: string): Promise<string> {
     return id.toString();
