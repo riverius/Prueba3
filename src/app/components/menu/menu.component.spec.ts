@@ -1,41 +1,35 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
-import { MenuComponent } from './menu.component';
-import { StateService } from '../../services/state.service';
-import { Firestore } from '@angular/fire/firestore';
 import { of } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { MenuComponent } from './menu.component';
+import { IonicModule } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
   let fixture: ComponentFixture<MenuComponent>;
+  let authService: jasmine.SpyObj<AuthService>;
 
-  beforeEach(async() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    const authServiceSpy = jasmine.createSpyObj('AuthService', ['login', 'logout', 'getUser', 'isLogedIn', 'getUserId', 'register', 'redirectUser', 'updateUserData', 'recoveryPassword']);
+    authServiceSpy.wrongCredentials = of(null);
+
+    await TestBed.configureTestingModule({
       declarations: [ MenuComponent ],
-      imports: [IonicModule.forRoot()],
+      imports: [IonicModule],
       providers: [
-        StateService,
-        {
-          provide: Firestore,
-          useValue: {
-            collection: () => ({
-              doc: () => ({
-                valueChanges: () => of({ foo: 'bar' }),
-                set: () => Promise.resolve(),
-              }),
-            }),
-          },
-        },
-      ],
+        { provide: AuthService, useValue: authServiceSpy },
+        { provide: NavController, useValue: NavController }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MenuComponent);
     component = fixture.componentInstance;
+    authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
 });

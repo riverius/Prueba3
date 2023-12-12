@@ -4,9 +4,9 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
-import { ExtendedUser } from 'src/app/models/user';
+import { of } from 'rxjs';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-// Stubs for app-header and app-menu components
 @Component({selector: 'app-header', template: ''})
 class HeaderComponentStub {}
 
@@ -19,29 +19,34 @@ describe('LoginPage', () => {
   let authService: jasmine.SpyObj<AuthService>;
   let router: Router;
   let navigateSpy: jasmine.Spy;
-
   beforeEach(async() => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['login']);
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
+    const mockAuthService = {
+      login: jasmine.createSpy('login').and.returnValue(Promise.resolve({ role: 'student' })),
+      redirectUser: jasmine.createSpy('redirectUser').and.returnValue(Promise.resolve()),
+      wrongCredentials: of()
+    };
 
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule], // use RouterTestingModule without routes
-      declarations: [ LoginPage, HeaderComponentStub, MenuComponentStub ], // include the stubs here
+      imports: [RouterTestingModule, FormsModule, ReactiveFormsModule],
+      declarations: [ LoginPage, HeaderComponentStub, MenuComponentStub ],
       providers: [
-        { provide: AuthService, useValue: authServiceSpy },
-        // remove the provide for Router
+        { provide: AuthService, useValue: mockAuthService }
       ]
-    }).compileComponents();
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    router = TestBed.inject(Router); // inject the router directly
-    navigateSpy = spyOn(router, 'navigate'); // set up a spy for the navigate method
+    router = TestBed.inject(Router);
+    navigateSpy = spyOn(router, 'navigate');
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  
+
 });

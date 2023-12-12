@@ -33,9 +33,9 @@ export class LoginPage implements OnInit {
     private formBuilder: FormBuilder,
     private router:Router,
     private platform: Platform,
-    private toastController: ToastController,
+    public toastController: ToastController,
     private location: Location,
-    private loadingController: LoadingController,
+    public loadingController: LoadingController,
     public deviceService: DeviceService) { 
     this.platform.backButton.subscribeWithPriority(0, () => {
       if (this.router.url === '/login') {

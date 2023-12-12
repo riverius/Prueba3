@@ -4,6 +4,8 @@ import { DatabaseService } from '../../services/database.service';
 import { StateService } from 'src/app/services/state.service';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
+import { IonicModule } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 
 describe('CursoPage', () => {
   let component: CursoPage;
@@ -11,10 +13,12 @@ describe('CursoPage', () => {
   let databaseService: DatabaseService;
   let stateService: StateService;
   let router: Router;
+  let navController: jasmine.SpyObj<NavController>;
 
   beforeEach(async() => {
     TestBed.configureTestingModule({
       declarations: [ CursoPage ],
+      imports: [IonicModule],
       providers: [
         {
           provide: DatabaseService,
@@ -33,7 +37,8 @@ describe('CursoPage', () => {
           useValue: {
             navigate: () => {}
           }
-        }
+        },
+        { provide: NavController, useValue: navController }
       ]
     }).compileComponents();
 

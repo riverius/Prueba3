@@ -3,6 +3,7 @@ import { AttendancePage } from './attendance.page';
 import { StateService } from 'src/app/services/state.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { of } from 'rxjs';
+import { IonicModule } from '@ionic/angular';
 
 describe('AttendancePage', () => {
   let component: AttendancePage;
@@ -13,6 +14,7 @@ describe('AttendancePage', () => {
   beforeEach(async() => {
     TestBed.configureTestingModule({
       declarations: [ AttendancePage ],
+      imports: [IonicModule],
       providers: [
         {
           provide: StateService,
