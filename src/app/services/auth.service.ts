@@ -57,19 +57,24 @@ export class AuthService {
   async getUser(): Promise<ExtendedUser | null> {
     const auth = getAuth(this.app);
     const firebaseUser = auth.currentUser;
-    if (!firebaseUser || !firebaseUser.displayName) {
+    if (!firebaseUser) {
       return null;
     }
-    const splitName = firebaseUser.displayName.split(" ");
-    const extendedUser = {
-      ...firebaseUser,
-      first_name: splitName[0] || "",
-      last_name: splitName[1] || "",
-      phone: "",
-      address: "",
-      role: "",
-    };
-    return extendedUser;
+    const db = getFirestore(this.app);
+    const userRef = doc(db, 'usuarios', firebaseUser.uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      const userData = userSnap.data() as ExtendedUser;
+      return {
+        ...firebaseUser,
+        first_name: userData.first_name || "",
+        last_name: userData.last_name || "",
+        phone: userData.phone || "",
+        address: userData.address || "",
+        role: userData.role || "",
+      };
+    }
+    return null;
   }
   
   async isLogedIn(): Promise<boolean> {
